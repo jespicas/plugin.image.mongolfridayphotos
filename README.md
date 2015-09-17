@@ -1,29 +1,17 @@
-plugin.image.flickr
+plugin.image.mongolfridayphotos
 ===================
 
-Flickr addon for Kodi (XBMC)
+Mongol Friday Photos addon for Kodi (XBMC)
 ----------------------------
-This addon provides access to both private and public photos and videos on flickr. Access to private photos requires authorizing the addon.
+This addon provides access to all volumes on webpage Mongol Friday Photos 
 
-Installation should be done through Kodi System::Settings::Add-ons::Get Add-Ons::All Add-Ons::Picture Add-Ons::flickr
+Installation should be done through Kodi System::Settings::Add-ons::Get Add-Ons::All Add-Ons::Picture Add-Ons::Mongol Friday Photos
 
-If you want to ensure you are using the latest version of the addon you can install my [repository .zip file](http://ruuks-repo.googlecode.com/files/ruuk.addon.repository-1.0.0.zip).
 
 Installation of the repository should be done through Kodi System::Settings::Add-ons::Install from zip file
 
-Support is available at: http://forum.xbmc.org/showthread.php?tid=81593
+Currently implemented Mongol Friday Photos features:
+  * List of volumes
+  * Enter on collection and see all images
+  * Kodi SlideShow works
 
-Currently implemented flickr features:
-  * Photostream
-  * Collections
-  * Sets
-  * Galleries
-  * Tags
-  * Places
-  * Favorites
-  * Contacts
-  * Groups
-  * Search Photostream
-  * Search flickr
-  * Search flickr Groups
-  * Interesting Today
