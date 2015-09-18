@@ -18,7 +18,7 @@
 		<description lang="ca">Mongol Friday photo et permet: Recorrer todos els volums que han sortit de cada divendres fins al dia d\'avui.</description>
 		<platform>all</platform>
 		<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
-		<forum>http://forum.xbmc.org/showthread.php?tid=81593</forum>
-		<source>http://github.com/ruuk/plugin.image.flickr</source>
+		<forum></forum>
+		<source>https://github.com/jespicas/plugin.image.mongolfridayphotos</source>
 	</extension>
 </addon>

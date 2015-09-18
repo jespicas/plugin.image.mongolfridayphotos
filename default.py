@@ -21,8 +21,20 @@ def build_url(query):
 
 mode = args.get('mode', None)
 
-if mode is None:
-    r = requests.get('http://www.machacas.com/category/mongol-friday-photos/')
+NumberPagination = 5
+
+r = requests.get('http://www.machacas.com/category/mongol-friday-photos/')
+data = r.text
+soup = BeautifulSoup(data)
+DivPagination = soup.body.findAll("div",{"class": "pagination"})
+#print DivPagination
+last = DivPagination[0].findAll('a')
+
+MaxPage = last[len(last)-1].attrs[0][1].split('/')[len(last[len(last)-1].attrs[0][1].split('/')) -1]
+
+def AddItems(Url,currentPage,EndDirectory):
+    #print Url
+    r = requests.get(Url)
     data = r.text
     soup = BeautifulSoup(data)
 
@@ -33,47 +45,48 @@ if mode is None:
         li = xbmcgui.ListItem(VolName, iconImage='DefaultFolder.png')
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url,listitem=li, isFolder=True)
 
-    NextPage = 'http://www.machacas.com/category/mongol-friday-photos/page/2'
-    url1 = build_url({'mode': 'next', 'foldername': 'Next','value':NextPage})
-    li1 = xbmcgui.ListItem('Next' , iconImage='DefaultFolder.png')
-    xbmcplugin.addDirectoryItem(handle=addon_handle, url=url1,listitem=li1, isFolder=True)
+    if (EndDirectory):
+        print MaxPage
+        if (currentPage +1) <= MaxPage:
+            currentPage = currentPage +1
+            print currentPage
+            NextPage = 'http://www.machacas.com/category/mongol-friday-photos/page/' + str(currentPage)
+            print NextPage
+            url1 = build_url({'mode': 'next', 'foldername': 'Next','value':NextPage})
+            li1 = xbmcgui.ListItem('Next' , iconImage='DefaultFolder.png')
+            xbmcplugin.addDirectoryItem(handle=addon_handle, url=url1,listitem=li1, isFolder=True)
 
-    xbmcplugin.endOfDirectory(addon_handle)
+        xbmcplugin.endOfDirectory(addon_handle)
+
+if mode is None:
+    AddItems('http://www.machacas.com/category/mongol-friday-photos/',1,False)
+    for Page in range(2,NumberPagination):
+        print Page
+        if Page+1 == NumberPagination:
+            print "LastIteration"
+            AddItems('http://www.machacas.com/category/mongol-friday-photos/page/'+str(Page),Page,True)
+        else:
+            print "Iteration" + str(Page)
+            AddItems('http://www.machacas.com/category/mongol-friday-photos/page/'+str(Page),Page,False)
+
+
 elif mode[0] == 'next':
     print 'Enter on next'
     valors = args['value'][0]
     print valors
-
-    r = requests.get(valors)
-    data = r.text
-    soup = BeautifulSoup(data)
-
-    for link in soup.body.findAll("div",{ "class" : "blog-item-wrap" }):
-        href = link.find('a').attrs[0][1]
-        print href
-        VolName = href.split('/')[3]
-        print VolName
-        url = build_url({'mode': 'folder', 'foldername': VolName,'value':href})
-        li = xbmcgui.ListItem(VolName, iconImage='DefaultFolder.png')
-        xbmcplugin.addDirectoryItem(handle=addon_handle, url=url,listitem=li, isFolder=True)
-
-    NextPage = 'http://www.machacas.com/category/mongol-friday-photos/page/3'
-    url1 = build_url({'mode': 'next', 'foldername': 'Next','value':NextPage})
-    li1 = xbmcgui.ListItem('Next' , iconImage='DefaultFolder.png')
-    xbmcplugin.addDirectoryItem(handle=addon_handle, url=url1,listitem=li1, isFolder=True)
-
-    xbmcplugin.endOfDirectory(addon_handle)
-
+    currentPage = int(valors.split('/')[len(valors.split('/'))-1])
+    for Page in range(currentPage,currentPage+NumberPagination):
+        if (Page +1 == currentPage+NumberPagination):
+            AddItems('http://www.machacas.com/category/mongol-friday-photos/page/'+str(Page),int(Page),True)
+        else:
+            AddItems('http://www.machacas.com/category/mongol-friday-photos/page/'+str(Page),int(Page),False)
 
 elif mode[0] == 'folder':
     foldername = args['foldername'][0]
     print foldername
     valors = args['value'][0]
     print valors
-    #url = 'https://googledrive.com/host/0B2XIl3N1QXfyc1lETGRFNjhubm8/01.jpg'
-    #li = xbmcgui.ListItem(foldername + ' Video', iconImage='DefaultVideo.png')
-    #xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
-    #xbmcplugin.endOfDirectory(addon_handle)
+
     r = requests.get(valors)
     data = r.text
     soup = BeautifulSoup(data)
@@ -84,16 +97,3 @@ elif mode[0] == 'folder':
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
     
     xbmcplugin.endOfDirectory(addon_handle)
-    #dialog = xbmcgui.Dialog()
-    #dialog.notification('Movie Trailers', valors, xbmcgui.NOTIFICATION_INFO, 5000)
-
-    #d = requests.get(valors)
-    #datas = d.text
-    #soup = BeautifulSoup(datas)
-    #print soup.body.find("img",{"class":"lazy"})
-    #for link in soup.body.findAll("img",{ "class" : "lazy" }):
-    #	url = link.attrs[3]
-    #	print url
-    #	li = xbmcgui.ListItem(foldername + ' Img', iconImage='DefaultVideo.png')
-    #	xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
-    #	xbmcplugin.endOfDirectory(addon_handle)
